@@ -1,3 +1,28 @@
+"""
+Проверка и установка зависимостей при запуске приложения.
+Если какие-то пакеты отсутствуют, они будут установлены через pip.
+"""
+import importlib.util
+import subprocess
+import sys
+
+# список необходимых пакетов (pip-имена)
+_REQUIRED_PACKAGES = [
+    "streamlit",
+    "pandas",
+    "numpy",
+    "scikit-learn",
+    "altair",
+]
+
+_missing = [p for p in _REQUIRED_PACKAGES if importlib.util.find_spec(p) is None]
+if _missing:
+    try:
+        print(f"Installing missing packages: {_missing}")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", *_missing])
+    except Exception as _err:
+        print("Automatic installation failed:", _err)
+
 import streamlit as st
 import pandas as pd
 import numpy as np
